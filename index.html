@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>奨学金 応募状況 照合システム</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2em;
+      max-width: 600px;
+      margin: auto;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      font-size: 1.8em;
+      margin-bottom: 1em;
+    }
+    label, input, button {
+      display: block;
+      width: 100%;
+      margin-bottom: 1em;
+    }
+    input {
+      padding: 0.5em;
+      font-size: 1em;
+    }
+    button {
+      padding: 0.8em;
+      background-color: #0066cc;
+      color: white;
+      font-size: 1em;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #004999;
+    }
+    #result-message {
+      margin-top: 1em;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+    .note {
+      font-size: 0.9em;
+      color: #555;
+      margin-top: 2em;
+      border-top: 1px solid #ccc;
+      padding-top: 1em;
+    }
+    footer {
+      margin-top: 3em;
+      font-size: 0.85em;
+      text-align: center;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <h1>奨学金 応募状況 照合システム</h1>
+
+  <p>ご自身のプレエントリーIDとメールアドレスを入力すると、奨学金の応募状況を確認できます。</p>
+
+  <form id="check-form">
+    <label for="entry-id">プレエントリーID（数字）</label>
+    <input type="text" id="entry-id" placeholder="例: 2024080112345" required />
+
+    <label for="email">メールアドレス</label>
+    <input type="email" id="email" placeholder="例: example@example.com" required />
+
+    <button type="submit">照合する</button>
+  </form>
+
+  <p id="result-message"></p>
+
+  <div class="note">
+    ※この照合システムは、奨学金に応募されたご本人による確認を目的としています。<br>
+    他人の情報を使用しての照合や、いたずら目的での利用はご遠慮ください。<br>
+    照合結果は一部の情報に基づく目安であり、正式な結果は別途通知されるものをご確認ください。
+  </div>
+
+  <footer>
+    &copy; 2025 奨学金事務局
+  </footer>
+
+  <script>
+    let winners = {};
+    let losers = {};
+
+    async function loadData() {
+      winners = await fetch('winners.json').then(res => res.json());
+      losers = await fetch('losers.json').then(res => res.json());
+    }
+
+    function extractMatchKey(entryId, email) {
+      const id = entryId.toString().replace(/\D/g, '');
+      const mail = email.trim().toLowerCase();
+      if (id.length < 6 || mail.length < 3) return null;
+      const idPart = id.slice(-6, -2);
+      const mailPart = mail.slice(0, 3);
+      return `${idPart}|${mailPart}`;
+    }
+
+    function checkStatus(key) {
+      if (!key) return "該当する応募データがありません";
+      if (key in winners) return "当選している可能性があります。お問い合わせください";
+      if (key in losers) return "落選しています";
+      return "該当する応募データがありません";
+    }
+
+    document.getElementById("check-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (Object.keys(winners).length === 0 || Object.keys(losers).length === 0) {
+        await loadData();
+      }
+      const entryId = document.getElementById("entry-id").value;
+      const email = document.getElementById("email").value;
+      const key = extractMatchKey(entryId, email);
+      const result = checkStatus(key);
+      document.getElementById("result-message").textContent = result;
+    });
+
+    loadData();
+  </script>
+</body>
+</html>
