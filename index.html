@@ -60,7 +60,7 @@
 <body>
   <h1>奨学金 当落照合システム</h1>
 
-  <p>奨学金に応募された際の「申し込み番号」と「メールアドレス」を入力し、「照合する」ボタンを押してください。</p>
+  <p>奨学金応募時にお知らせした「申し込み番号」と「メールアドレス」を入力して「照合する」ボタンを押してください。</p>
 
   <form id="check-form">
     <label for="entry-id">申し込み番号（例: R6_12345678）</label>
@@ -102,10 +102,11 @@
     }
 
     function checkStatus(key) {
-      if (!key) return "該当する応募データが見当たりません\ninfo@shinfdn.org へご連絡下さい";
-      if (key in winners) return "当選している可能性があります\nメールボックスにて、奨学助成金事務局 info@shinfdn.org からのメールを検索してください\n見当たらない場合は、info@shinfdn.org へご連絡下さい";
-      if (key in losers) return "落選しています";
-      return "該当する応募データが見当たりません\ninfo@shinfdn.org へご連絡下さい";
+      const contactLink = '<a href="https://www.shinfdn.org/contact" target="_blank">お問い合わせフォーム</a>から奨学助成金事務局へお問い合わせください';
+      if (!key) return `該当する応募データが見当たりません<br>${contactLink}`;
+      if (key in winners) return `当選している可能性があります<br>メールボックスにて、奨学助成金事務局 info@shinfdn.org からのメールを検索してください<br>見当たらない場合は、${contactLink}`;
+      if (key in losers) return `落選しています`;
+      return `該当する応募データが見当たりません<br>${contactLink}`;
     }
 
     document.getElementById("check-form").addEventListener("submit", async (e) => {
@@ -117,7 +118,7 @@
       const email = document.getElementById("email").value;
       const key = extractMatchKey(entryId, email);
       const result = checkStatus(key);
-      document.getElementById("result-message").innerHTML = result.replace(/\n/g, "<br>");
+      document.getElementById("result-message").innerHTML = result;
     });
 
     loadData();
