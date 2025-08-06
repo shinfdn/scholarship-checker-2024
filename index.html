@@ -90,7 +90,8 @@
 
   <div class="note">
     ※この照合システムは、奨学金に応募されたご本人による確認を目的としています。<br>
-    他人の情報を使用しての照合はご遠慮ください。
+    他人の情報を使用しての照合はご遠慮ください。<br>
+    入力されたメールアドレス等の情報は一切収集・保存されません。
   </div>
 
   <footer>
@@ -118,7 +119,7 @@
     function checkStatus(key) {
       const contactLink = '<a href="https://www.shinfdn.org/contact" target="_blank">お問い合わせフォーム</a>から奨学助成金事務局へお問い合わせください';
       if (!key) return `該当する応募データが見当たりません<br>${contactLink}`;
-      if (key in winners) return `当選している可能性があります<br>メールボックスにて、奨学助成金事務局 info@shinfdn.org からのメールを検索してください<br>見当たらない場合は、${contactLink}`;
+      if (key in winners) return `当選している可能性があります<br>メールボックスにて、奨学助成金事務局からのメールを検索してください<br>見当たらない場合は、${contactLink}`;
       if (key in losers) return `落選しています`;
       return `該当する応募データが見当たりません<br>${contactLink}`;
     }
