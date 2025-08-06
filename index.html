@@ -59,11 +59,11 @@
 <body>
   <h1>奨学金 応募状況 照合システム</h1>
 
-  <p>ご自身のプレエントリーIDとメールアドレスを入力すると、奨学金の応募状況を確認できます。</p>
+  <p>奨学金応募時にお知らせした申し込み番号と、応募時のメールアドレスを入力して「照合する」ボタンを押してください。</p>
 
   <form id="check-form">
-    <label for="entry-id">プレエントリーID（数字）</label>
-    <input type="text" id="entry-id" placeholder="例: 2024080112345" required />
+    <label for="entry-id">申し込み番号（例: R6_12345678）</label>
+    <input type="text" id="entry-id" placeholder="例: R6_12345678" required />
 
     <label for="email">メールアドレス</label>
     <input type="email" id="email" placeholder="例: example@example.com" required />
@@ -75,12 +75,11 @@
 
   <div class="note">
     ※この照合システムは、奨学金に応募されたご本人による確認を目的としています。<br>
-    他人の情報を使用しての照合や、いたずら目的での利用はご遠慮ください。<br>
-    照合結果は一部の情報に基づく目安であり、正式な結果は別途通知されるものをご確認ください。
+    他人の情報を使用しての照合はご遠慮ください。
   </div>
 
   <footer>
-    &copy; 2025 奨学金事務局
+    YYYY財団ZZZZ（XXXX）奨学助成金事務局
   </footer>
 
   <script>
@@ -102,25 +101,6 @@
     }
 
     function checkStatus(key) {
-      if (!key) return "該当する応募データがありません";
-      if (key in winners) return "当選している可能性があります。お問い合わせください";
-      if (key in losers) return "落選しています";
-      return "該当する応募データがありません";
-    }
-
-    document.getElementById("check-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (Object.keys(winners).length === 0 || Object.keys(losers).length === 0) {
-        await loadData();
-      }
-      const entryId = document.getElementById("entry-id").value;
-      const email = document.getElementById("email").value;
-      const key = extractMatchKey(entryId, email);
-      const result = checkStatus(key);
-      document.getElementById("result-message").textContent = result;
-    });
-
-    loadData();
-  </script>
-</body>
-</html>
+      if (!key) return "該当する応募データが見当たりません\ninfo@shinfdn.org へご連絡下さい";
+      if (key in winners) return "当選している可能性があります\nメールボックスにて、奨学助成金事務局 info@shinfdn.org からのメールを検索してください\n見当たらない場合は、info@shinfdn.org へご連絡下さい";
+      if (
